@@ -19,6 +19,8 @@ function update() {
   const b = distance(A, C);
 
   const sin = a / c;
+  const cos = b / c;
+  const tan = a / b;
   // arcsin = sin inverse
   // asin will give 𝜃 value in radian instead of degree
   const theta = Math.asin(sin);
@@ -27,10 +29,33 @@ function update() {
 
   drawCoordinateSystem(ctx, offset);
 
-  drawText('sin = a/c = ' + sin.toFixed(2), {
-    x: -offset.x / 2,
-    y: offset.y * 0.75,
-  });
+  drawText(
+    'sin = a/c = ' + sin.toFixed(2),
+    {
+      x: -offset.x / 2,
+      y: offset.y * 0.7,
+    },
+    'red'
+  );
+
+  drawText(
+    'cos = b/c = ' + cos.toFixed(2),
+    {
+      x: -offset.x / 2,
+      y: offset.y * 0.8,
+    },
+    'blue'
+  );
+
+  drawText(
+    'tan = a/b = ' + tan.toFixed(2),
+    {
+      x: -offset.x / 2,
+      y: offset.y * 0.9,
+    },
+    'magenta'
+  );
+
   drawText(
     '𝜃 = ' +
       theta.toFixed(2) +
@@ -45,10 +70,10 @@ function update() {
 
   drawLine(A, B);
   drawText('c', average(A, B));
-  drawLine(A, C);
-  drawText('b', average(A, C));
-  drawLine(B, C);
-  drawText('a', average(B, C));
+  drawLine(A, C, 'blue');
+  drawText('b', average(A, C), 'blue');
+  drawLine(B, C, 'red');
+  drawText('a', average(B, C), 'red');
 
   drawText('𝜃', A);
 
