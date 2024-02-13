@@ -1,8 +1,14 @@
-const ctx = myCanvas.getContext('2d');
+const trigCtx = trigCanvas.getContext('2d');
+const chartCtx = chartCanvas.getContext('2d');
 
-const offset = {
-  x: myCanvas.width / 2,
-  y: myCanvas.height / 2,
+const trigOffset = {
+  x: trigCanvas.width / 2,
+  y: trigCanvas.height / 2,
+};
+
+const chartOffset = {
+  x: chartCanvas.width / 2,
+  y: chartCanvas.height / 2,
 };
 
 const A = { x: 0, y: 0 };
@@ -10,7 +16,10 @@ const B = { x: 90, y: 120 };
 const C = { x: B.x, y: 0 };
 
 // move 0,0 to middle of canvas
-ctx.translate(offset.x, offset.y);
+trigCtx.translate(trigOffset.x, trigOffset.y);
+chartCtx.translate(chartOffset.x, chartOffset.y);
+
+drawCoordinateSystem(chartCtx, chartOffset);
 
 function update() {
   // naming convetion AB opposite is C so name distance b/w AB as c
@@ -25,15 +34,20 @@ function update() {
   // asin will give 𝜃 value in radian instead of degree
   const theta = Math.asin(sin);
 
-  ctx.clearRect(-offset.x, -offset.y, myCanvas.width, myCanvas.height);
+  trigCtx.clearRect(
+    -trigOffset.x,
+    -trigOffset.y,
+    trigCanvas.width,
+    trigCanvas.height
+  );
 
-  drawCoordinateSystem(ctx, offset);
+  drawCoordinateSystem(trigCtx, trigOffset);
 
   drawText(
     'sin = a/c = ' + sin.toFixed(2),
     {
-      x: -offset.x / 2,
-      y: offset.y * 0.7,
+      x: -trigOffset.x / 2,
+      y: trigOffset.y * 0.7,
     },
     'red'
   );
@@ -41,8 +55,8 @@ function update() {
   drawText(
     'cos = b/c = ' + cos.toFixed(2),
     {
-      x: -offset.x / 2,
-      y: offset.y * 0.8,
+      x: -trigOffset.x / 2,
+      y: trigOffset.y * 0.8,
     },
     'blue'
   );
@@ -50,8 +64,8 @@ function update() {
   drawText(
     'tan = a/b = ' + tan.toFixed(2),
     {
-      x: -offset.x / 2,
-      y: offset.y * 0.9,
+      x: -trigOffset.x / 2,
+      y: trigOffset.y * 0.9,
     },
     'magenta'
   );
@@ -63,8 +77,8 @@ function update() {
       Math.round(toDegree(theta)) +
       '°)'.toString().padStart(2, ' '),
     {
-      x: offset.x / 2,
-      y: offset.y * 0.75,
+      x: trigOffset.x / 2,
+      y: trigOffset.y * 0.75,
     }
   );
 
@@ -77,9 +91,9 @@ function update() {
 
   drawText('𝜃', A);
 
-  ctx.beginPath();
-  ctx.strokeStyle = 'black';
-  ctx.lineWidth = 2;
+  trigCtx.beginPath();
+  trigCtx.strokeStyle = 'black';
+  trigCtx.lineWidth = 2;
   // Determine the starting angle of the arc based on the relative position of points B and A
   const start = B.x > A.x ? 0 : Math.PI;
   // Determine whether the arc should be drawn clockwise or counterclockwise
@@ -91,14 +105,41 @@ function update() {
     end = Math.PI - end;
   }
 
-  ctx.arc(0, 0, 20, start, end, !clockwise);
-  ctx.stroke();
+  trigCtx.arc(0, 0, 20, start, end, !clockwise);
+  trigCtx.stroke();
+
+  // draw the graph using sin, cosine, tangent values
+  const chartScalar = chartOffset.y * 0.5;
+  drawPoint(
+    {
+      x: theta * chartScalar,
+      y: sin * chartScalar,
+    },
+    2,
+    'red'
+  );
+  drawPoint(
+    {
+      x: theta * chartScalar,
+      y: cos * chartScalar,
+    },
+    2,
+    'blue'
+  );
+  drawPoint(
+    {
+      x: theta * chartScalar,
+      y: tan * chartScalar,
+    },
+    2,
+    'magenta'
+  );
 }
 
 update();
 document.onmousemove = (event) => {
-  B.x = event.x - offset.x;
-  B.y = event.y - offset.y;
+  B.x = event.x - trigOffset.x;
+  B.y = event.y - trigOffset.y;
 
   C.x = B.x;
 
@@ -122,43 +163,43 @@ function distance(p1, p2) {
 }
 
 function drawText(text, loc, color = 'black') {
-  ctx.beginPath();
-  ctx.fillStyle = color;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.font = 'bold 18px Courier';
-  ctx.strokeStyle = 'white';
-  ctx.lineWidth = 7;
-  ctx.strokeText(text, loc.x, loc.y);
-  ctx.fillText(text, loc.x, loc.y);
+  trigCtx.beginPath();
+  trigCtx.fillStyle = color;
+  trigCtx.textAlign = 'center';
+  trigCtx.textBaseline = 'middle';
+  trigCtx.font = 'bold 18px Courier';
+  trigCtx.strokeStyle = 'white';
+  trigCtx.lineWidth = 7;
+  trigCtx.strokeText(text, loc.x, loc.y);
+  trigCtx.fillText(text, loc.x, loc.y);
 }
 
 function drawPoint(loc, size = 20, color = 'black') {
-  ctx.beginPath();
-  ctx.fillStyle = color;
-  ctx.arc(loc.x, loc.y, size / 2, 0, Math.PI * 2);
-  ctx.fill();
+  chartCtx.beginPath();
+  chartCtx.fillStyle = color;
+  chartCtx.arc(loc.x, loc.y, size / 2, 0, Math.PI * 2);
+  chartCtx.fill();
 }
 
 function drawLine(p1, p2, color = 'black') {
-  ctx.beginPath();
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 2;
-  ctx.moveTo(p1.x, p1.y);
-  ctx.lineTo(p2.x, p2.y);
-  ctx.stroke();
+  trigCtx.beginPath();
+  trigCtx.strokeStyle = color;
+  trigCtx.lineWidth = 2;
+  trigCtx.moveTo(p1.x, p1.y);
+  trigCtx.lineTo(p2.x, p2.y);
+  trigCtx.stroke();
 }
 
-function drawCoordinateSystem(ctx, offset) {
-  ctx.beginPath();
-  ctx.moveTo(-offset.x, 0);
+function drawCoordinateSystem(trigCtx, trigOffset) {
+  trigCtx.beginPath();
+  trigCtx.moveTo(-trigOffset.x, 0);
   // horizontal line
-  ctx.lineTo(ctx.canvas.width - offset.x, 0);
-  ctx.moveTo(0, -offset.y);
-  ctx.lineTo(0, ctx.canvas.height - offset.y);
-  ctx.setLineDash([4, 2]);
-  ctx.lineWidth = 1;
-  ctx.strokeStyle = 'grey';
-  ctx.stroke();
-  ctx.setLineDash([]);
+  trigCtx.lineTo(trigCtx.canvas.width - trigOffset.x, 0);
+  trigCtx.moveTo(0, -trigOffset.y);
+  trigCtx.lineTo(0, trigCtx.canvas.height - trigOffset.y);
+  trigCtx.setLineDash([4, 2]);
+  trigCtx.lineWidth = 1;
+  trigCtx.strokeStyle = 'grey';
+  trigCtx.stroke();
+  trigCtx.setLineDash([]);
 }
