@@ -47,13 +47,12 @@ document.addEventListener('touchstart', function (event) {
 });
 
 // Attach the handleScroll function to mouse wheel events
-document.onwheel = handleScroll;
+document.addEventListener('wheel', handleScroll, { passive: false }); //onwheel = handleScroll;
 // Attach the handleScroll function to touchpad gestures (touchmove)
-document.addEventListener('touchmove', handleScroll);
+document.addEventListener('touchmove', handleScroll, { passive: false });
 
 // Function to handle mouse wheel and touchpad events
 function handleScroll(event) {
-  console.log(event);
   // Use deltaY for mouse wheel events and touches for touchpad gestures
   const deltaY = event.deltaY || event.touches[0].clientY - touchStartY;
   // Adjust theta based on the direction of the scroll
