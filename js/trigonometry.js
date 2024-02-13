@@ -18,9 +18,30 @@ function update() {
   const a = distance(B, C);
   const b = distance(A, C);
 
+  const sin = a / c;
+  // arcsin = sin inverse
+  // asin will give 𝜃 value in radian instead of degree
+  const theta = Math.asin(sin);
+
   ctx.clearRect(-offset.x, -offset.y, myCanvas.width, myCanvas.height);
 
   drawCoordinateSystem(ctx, offset);
+
+  drawText('sin = a/c = ' + sin.toFixed(2), {
+    x: -offset.x / 2,
+    y: offset.y * 0.75,
+  });
+  drawText(
+    '𝜃 = ' +
+      theta.toFixed(2) +
+      ' (' +
+      Math.round(toDegree(theta)) +
+      '°)'.toString().padStart(2, ' '),
+    {
+      x: offset.x / 2,
+      y: offset.y * 0.75,
+    }
+  );
 
   drawLine(A, B);
   drawText('c', average(A, B));
@@ -30,6 +51,23 @@ function update() {
   drawText('a', average(B, C));
 
   drawText('𝜃', A);
+
+  ctx.beginPath();
+  ctx.strokeStyle = 'black';
+  ctx.lineWidth = 2;
+  // Determine the starting angle of the arc based on the relative position of points B and A
+  const start = B.x > A.x ? 0 : Math.PI;
+  // Determine whether the arc should be drawn clockwise or counterclockwise
+  const clockwise = (B.y < C.y) ^ (B.x > A.x);
+  // Calculate the ending angle of the arc based on the value of theta and the relative positions of points B, C, and A
+  let end = B.y < C.y ? -theta : theta;
+  // Adjust the ending angle if point B is to the left of point A
+  if (B.x < A.x) {
+    end = Math.PI - end;
+  }
+
+  ctx.arc(0, 0, 20, start, end, !clockwise);
+  ctx.stroke();
 }
 
 update();
@@ -41,6 +79,11 @@ document.onmousemove = (event) => {
 
   update();
 };
+
+// Radian to degree
+function toDegree(radian) {
+  return (radian * 180) / Math.PI;
+}
 
 function average(p1, p2) {
   return {
