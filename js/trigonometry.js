@@ -28,16 +28,46 @@ chartCtx.translate(chartOffset.x, chartOffset.y);
 drawCoordinateSystem(chartCtx, chartOffset);
 
 update();
-document.onwheel = (event) => {
-  theta -= toRadian(Math.sign(event.deltaY));
 
+// document.onwheel = (event) => {
+//   theta -= toRadian(Math.sign(event.deltaY));
+
+//   B.x = Math.cos(theta) * c;
+//   B.y = Math.sin(theta) * c;
+
+//   C.x = B.x;
+
+//   update();
+// };
+
+// Touch start event handler
+let touchStartY = 0;
+document.addEventListener('touchstart', function (event) {
+  touchStartY = event.touches[0].clientY;
+});
+
+// Attach the handleScroll function to mouse wheel events
+document.onwheel = handleScroll;
+// Attach the handleScroll function to touchpad gestures (touchmove)
+document.addEventListener('touchmove', handleScroll);
+
+// Function to handle mouse wheel and touchpad events
+function handleScroll(event) {
+  console.log(event);
+  // Use deltaY for mouse wheel events and touches for touchpad gestures
+  const deltaY = event.deltaY || event.touches[0].clientY - touchStartY;
+  // Adjust theta based on the direction of the scroll
+  theta -= toRadian(Math.sign(deltaY));
+  // Update the coordinates of point B based on theta
   B.x = Math.cos(theta) * c;
   B.y = Math.sin(theta) * c;
-
+  // Update the x-coordinate of point C to match point B
   C.x = B.x;
-
+  // Call the update function to reflect the changes on the canvas
   update();
-};
+  // Prevent the default behavior of the event to prevent scrolling the entire page
+  event.preventDefault();
+}
 
 function update() {
   const sin = Math.sin(theta);
