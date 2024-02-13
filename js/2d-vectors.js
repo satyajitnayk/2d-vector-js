@@ -12,7 +12,7 @@ ctx.translate(offset.x, offset.y);
 
 update();
 document.onmousemove = (event) => {
-  point.x = event.x - offset.x;
+  point.x = event.x - 3 * offset.x;
   point.y = event.y - offset.y;
 
   update();
@@ -26,9 +26,6 @@ function update() {
   const { dir, mag } = toPolar(point);
   const same = toXY({ dir, mag });
 
-  drawArrow({ x: 0, y: 0 }, point, 'red');
-  drawArrow({ x: 0, y: 0 }, G, 'red');
-
   const resultAdd = add(point, G);
   ctx.beginPath();
   ctx.setLineDash([3, 3]);
@@ -37,10 +34,16 @@ function update() {
   ctx.lineTo(point.x, point.y);
   ctx.stroke();
   ctx.setLineDash([]);
-  drawArrow({ x: 0, y: 0 }, resultAdd);
+  drawArrow({ x: 0, y: 0 }, resultAdd, 'red');
 
   const resultSub = subtract(point, G);
-  drawArrow({ x: 0, y: 0 }, resultSub);
+  drawArrow({ x: 0, y: 0 }, resultSub, 'green');
+
+  const scaledSub = scale(normalize(resultSub), 50);
+  drawArrow({ x: 0, y: 0 }, scaledSub, 'yellow');
+
+  drawArrow({ x: 0, y: 0 }, point);
+  drawArrow({ x: 0, y: 0 }, G);
 }
 
 function drawArrow(tail, tip, color = 'white', size = 20) {
@@ -69,6 +72,21 @@ function drawArrow(tail, tip, color = 'white', size = 20) {
   ctx.stroke();
   ctx.fillStyle = color;
   ctx.fill();
+}
+
+function dotProduct(p1, p2) {
+  return p1.x * p2.x + p1.y * p2.y;
+}
+
+function normalize(p) {
+  return scale(p, 1 / magnitude(p));
+}
+
+function scale(p, scalar) {
+  return {
+    x: p.x * scalar,
+    y: p.y * scalar,
+  };
 }
 
 function add(p1, p2) {
