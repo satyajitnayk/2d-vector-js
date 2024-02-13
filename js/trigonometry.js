@@ -11,8 +11,14 @@ const chartOffset = {
   y: chartCanvas.height / 2,
 };
 
+let theta = Math.PI / 4;
+const c = 100;
+
 const A = { x: 0, y: 0 };
-const B = { x: 90, y: 120 };
+const B = {
+  x: Math.cos(theta) * c,
+  y: Math.sin(theta) * c,
+};
 const C = { x: B.x, y: 0 };
 
 // move 0,0 to middle of canvas
@@ -21,18 +27,29 @@ chartCtx.translate(chartOffset.x, chartOffset.y);
 
 drawCoordinateSystem(chartCtx, chartOffset);
 
-function update() {
-  // naming convetion AB opposite is C so name distance b/w AB as c
-  const c = distance(A, B);
-  const a = distance(B, C);
-  const b = distance(A, C);
+update();
+document.onwheel = (event) => {
+  theta -= toRadian(Math.sign(event.deltaY));
 
-  const sin = a / c;
-  const cos = b / c;
-  const tan = a / b;
-  // arcsin = sin inverse
-  // asin will give 𝜃 value in radian instead of degree
-  const theta = Math.asin(sin);
+  B.x = Math.cos(theta) * c;
+  B.y = Math.sin(theta) * c;
+
+  C.x = B.x;
+
+  update();
+};
+
+function update() {
+  const sin = Math.sin(theta);
+  const cos = Math.cos(theta);
+  const tan = Math.tan(theta);
+
+  // tangent point on x axis
+  // multiplying Math.sign(cos)  to draw tangent in correct direction
+  const T = {
+    x: Math.sign(cos) * Math.hypot(1, tan) * c,
+    y: 0,
+  };
 
   trigCtx.clearRect(
     -trigOffset.x,
@@ -44,7 +61,7 @@ function update() {
   drawCoordinateSystem(trigCtx, trigOffset);
 
   drawText(
-    'sin = a/c = ' + sin.toFixed(2),
+    'sin = ' + sin.toFixed(2),
     {
       x: -trigOffset.x / 2,
       y: trigOffset.y * 0.7,
@@ -53,7 +70,7 @@ function update() {
   );
 
   drawText(
-    'cos = b/c = ' + cos.toFixed(2),
+    'cos = ' + cos.toFixed(2),
     {
       x: -trigOffset.x / 2,
       y: trigOffset.y * 0.8,
@@ -62,7 +79,7 @@ function update() {
   );
 
   drawText(
-    'tan = a/b = ' + tan.toFixed(2),
+    'tan = ' + tan.toFixed(2),
     {
       x: -trigOffset.x / 2,
       y: trigOffset.y * 0.9,
@@ -83,29 +100,21 @@ function update() {
   );
 
   drawLine(A, B);
-  drawText('c', average(A, B));
+  drawText('1', average(A, B));
   drawLine(A, C, 'blue');
   drawText('b', average(A, C), 'blue');
   drawLine(B, C, 'red');
   drawText('a', average(B, C), 'red');
+  drawLine(B, T, 'magenta');
+  drawText('tan', average(B, T), 'magenta');
 
   drawText('𝜃', A);
 
   trigCtx.beginPath();
   trigCtx.strokeStyle = 'black';
   trigCtx.lineWidth = 2;
-  // Determine the starting angle of the arc based on the relative position of points B and A
-  const start = B.x > A.x ? 0 : Math.PI;
-  // Determine whether the arc should be drawn clockwise or counterclockwise
-  const clockwise = (B.y < C.y) ^ (B.x > A.x);
-  // Calculate the ending angle of the arc based on the value of theta and the relative positions of points B, C, and A
-  let end = B.y < C.y ? -theta : theta;
-  // Adjust the ending angle if point B is to the left of point A
-  if (B.x < A.x) {
-    end = Math.PI - end;
-  }
 
-  trigCtx.arc(0, 0, 20, start, end, !clockwise);
+  trigCtx.arc(0, 0, c, 0, theta, theta < 0);
   trigCtx.stroke();
 
   // draw the graph using sin, cosine, tangent values
@@ -136,19 +145,14 @@ function update() {
   );
 }
 
-update();
-document.onmousemove = (event) => {
-  B.x = event.x - trigOffset.x;
-  B.y = event.y - trigOffset.y;
-
-  C.x = B.x;
-
-  update();
-};
-
-// Radian to degree
+// Radian to degree : 2PI radian is perimeter of unit circle
 function toDegree(radian) {
   return (radian * 180) / Math.PI;
+}
+
+// degree to Radian
+function toRadian(degree) {
+  return (degree * Math.PI) / 180;
 }
 
 function average(p1, p2) {
