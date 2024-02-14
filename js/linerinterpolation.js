@@ -6,6 +6,9 @@ const ctx = interpCanvas.getContext('2d');
 const A = { x: 100, y: 300 };
 const B = { x: 400, y: 100 };
 
+const orange = { r: 230, g: 150, b: 0 };
+const blue = { r: 0, g: 70, b: 160 };
+
 animate();
 
 function animate() {
@@ -21,14 +24,19 @@ function animate() {
   drawDot(A, 'A');
   drawDot(B, 'B');
 
+  // change background color
+  const { r, g, b } = vLerp(orange, blue, t);
+  interpCanvas.style.backgroundColor = `rgb(${r},${g},${b})`;
+
   requestAnimationFrame(animate);
 }
 
 function vLerp(A, B, t) {
-  return {
-    x: lerp(A.x, B.x, t),
-    y: lerp(A.y, B.y, t),
-  };
+  const result = {};
+  for (let attr in A) {
+    result[attr] = lerp(A[attr], B[attr], t);
+  }
+  return result;
 }
 
 // liner interpolation of number
