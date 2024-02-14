@@ -41,7 +41,6 @@ function animate() {
   ctx.clearRect(0, 0, interpCanvas.width, interpCanvas.height);
 
   const sec = new Date().getTime() / 1000;
-  console.log(sec);
   // smoothing function
   const t = (Math.sin(sec * Math.PI) + 1) / 2;
   const C = vLerp(A, B, t);
