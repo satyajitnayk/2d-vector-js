@@ -1,7 +1,33 @@
 interpCanvas.width = window.innerWidth;
 interpCanvas.height = window.innerHeight;
 
+const lowFreq = 200;
+const highFreq = 600;
+
 const ctx = interpCanvas.getContext('2d');
+
+let audioCtx = null;
+let ocs = null;
+
+interpCanvas.onclick = function () {
+  if (audioCtx == null) {
+    audioCtx = new (AudioContext ||
+      webkitAudioContext ||
+      window.webkitAudioContext)();
+    // define an occilator
+    ocs = audioCtx.createOscillator();
+    ocs.frequency.value = 200;
+    ocs.start();
+
+    // reduce volume using gain node
+    const node = audioCtx.createGain();
+    node.gain.value = 0.1;
+
+    // connect the oscilator to the node
+    ocs.connect(node);
+    node.connect(audioCtx.destination);
+  }
+};
 
 const A = { x: 100, y: 300 };
 const B = { x: 400, y: 100 };
@@ -27,6 +53,10 @@ function animate() {
   // change background color
   const { r, g, b } = vLerp(orange, blue, t);
   interpCanvas.style.backgroundColor = `rgb(${r},${g},${b})`;
+
+  if (ocs) {
+    ocs.frequency.value = lerp(lowFreq, highFreq, t);
+  }
 
   requestAnimationFrame(animate);
 }
