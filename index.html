@@ -48,11 +48,12 @@
 
   (Dx-Cx)*(Ay-Cy) - (Ax-Cx)(Dy-Cy) = (Bx-Ax)(Dy-Cy)t -(Dx-Cx)(By-Ay)t
 
-  => t = ((Dx-Cx)*(Ay-Cy) - (Ax-Cx)(Dy-Cy)) / ((Bx-Ax)(Dy-Cy) -(Dx-Cx)(By-Ay))
+  => t = (Dx-Cx)*(Ay-Cy) - (Ax-Cx)*(Dy-Cy) / (Bx-Ax)(Dy-Cy) -(Dx-Cx)(By-Ay)
+  => u = (Bx-Ax)*(Dy-Cy) - (Dx-Cx)*(By - Ay) / (Bx-Ax)(Dy-Cy) -(Dx-Cx)(By-Ay)
 
   FINAL value, using liner interpolation
-  Ix = A.x + (B.x - A.x) * t
-  Iy = A.y + (B.y - A.y) * t
+  Ix = Ax + (Bx - Ax) * t
+  Iy = Ay + (By - Ay) * t
 
           </pre>
         </li>
