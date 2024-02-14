@@ -35,6 +35,7 @@ function animate() {
 
 function getIntersection(A, B, C, D) {
   /**
+   Let's assume (Ix,Iy) is intersection point of Line AB & CD
    Ix = Ax + (Bx - Ax)t = Cx + (Dx - Cx)u
    Iy = Ay + (By - Ay)t = Cy + (Dy - Cy)u
 
@@ -43,9 +44,9 @@ function getIntersection(A, B, C, D) {
 
    Ay + (By - Ay)t = Cy + (Dy - Cy)u
    Ay-Cy + (By-Ay)t = (Dy-Cy)u
-   (Dx-Cx)*(Ay-Cy) + (Dx-Cx)*(By-Ay)*t = (Dy-Cy)*(Dx-Cx)*u 
 
-   use value Dx-Cx)u from eq (i)
+   (Dx-Cx)*(Ay-Cy) + (Dx-Cx)*(By-Ay)*t = (Dy-Cy)*(Dx-Cx)*u 
+   use value (Dx-Cx)u from eq (i)
 
    (Dx-Cx)*(Ay-Cy) + (Dx-Cx)*(By-Ay)*t =(Ax-Cx)(Dy-Cy) + (Bx-Ax)(Dy-Cy)t
    - subtract (Ax-Cx)(Dy-Cy) from both sides
@@ -53,9 +54,11 @@ function getIntersection(A, B, C, D) {
 
    (Dx-Cx)*(Ay-Cy) - (Ax-Cx)(Dy-Cy) = (Bx-Ax)(Dy-Cy)t -(Dx-Cx)(By-Ay)t
 
-   FINAL FORMULA
    => t = ((Dx-Cx)*(Ay-Cy) - (Ax-Cx)(Dy-Cy)) / ((Bx-Ax)(Dy-Cy) -(Dx-Cx)(By-Ay))
-
+   
+   FINAL value, using liner interpolation
+   Ix = A.x + (B.x - A.x) * t
+   Iy = A.y + (B.y - A.y) * t
    */
 
   const numerator = (D.x - C.x) * (A.y - C.y) - (A.x - C.x) * (D.y - C.y);
