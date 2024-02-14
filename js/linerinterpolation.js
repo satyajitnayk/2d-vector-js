@@ -1,21 +1,35 @@
 interpCanvas.width = window.innerWidth;
 interpCanvas.height = window.innerHeight;
 
-const A = { x: 100, y: 200 };
-const B = { x: 400, y: 200 };
+const ctx = interpCanvas.getContext('2d');
 
-const n = 10;
-for (let i = 0; i < n; ++i) {
-  const t = i / (n - 1);
-  const C = {
-    x: lerp(A.x, B.x, t),
-    y: 200,
-  };
-  drawDot(C, '.' + i);
+const A = { x: 100, y: 300 };
+const B = { x: 400, y: 100 };
+
+animate();
+
+function animate() {
+  ctx.clearRect(0, 0, interpCanvas.width, interpCanvas.height);
+
+  const sec = new Date().getTime() / 1000;
+  console.log(sec);
+  // smoothing function
+  const t = (Math.sin(sec * Math.PI) + 1) / 2;
+  const C = vLerp(A, B, t);
+  drawDot(C, '');
+
+  drawDot(A, 'A');
+  drawDot(B, 'B');
+
+  requestAnimationFrame(animate);
 }
 
-drawDot(A, 'A');
-drawDot(B, 'B');
+function vLerp(A, B, t) {
+  return {
+    x: lerp(A.x, B.x, t),
+    y: lerp(A.y, B.y, t),
+  };
+}
 
 // liner interpolation of number
 function lerp(a, b, t) {
@@ -23,7 +37,6 @@ function lerp(a, b, t) {
 }
 
 function drawDot(p, label) {
-  const ctx = interpCanvas.getContext('2d');
   ctx.beginPath();
   ctx.fillStyle = 'white';
   ctx.strokeStyle = 'black';
