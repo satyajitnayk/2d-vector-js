@@ -58,6 +58,16 @@ function animate() {
     ocs.frequency.value = lerp(lowFreq, highFreq, t);
   }
 
+  ctx.strokeStyle = 'white';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  ctx.font = 'bold 40px Arial';
+  ctx.setLineDash([lerp(50, 130, t), 130]);
+  ctx.strokeText('click for sound', interpCanvas.width / 2, 10);
+  ctx.setLineDash([]);
+  ctx.fillStyle = 'rgba(255,255,255,0.2)';
+  ctx.fillText('click for sound', interpCanvas.width / 2, 10);
+
   requestAnimationFrame(animate);
 }
 
