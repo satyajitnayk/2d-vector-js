@@ -1,17 +1,3 @@
-function drawDot(p, label) {
-  ctx.beginPath();
-  ctx.fillStyle = 'white';
-  ctx.strokeStyle = 'black';
-  ctx.arc(p.x, p.y, 10, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.stroke();
-  ctx.fillStyle = 'black';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.font = 'bold 14px Arial';
-  ctx.fillText(label, p.x, p.y);
-}
-
 function vLerp(A, B, t) {
   const result = {};
   for (let attr in A) {

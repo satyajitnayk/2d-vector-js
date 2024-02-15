@@ -1,12 +1,12 @@
-interCanvas.width = window.innerWidth;
-interCanvas.height = window.innerHeight;
+myCanvas.width = window.innerWidth;
+myCanvas.height = window.innerHeight;
 
 const A = { x: 200, y: 150 };
 const B = { x: 150, y: 250 };
 const C = { x: 50, y: 100 };
 const D = { x: 250, y: 200 };
 
-const ctx = interCanvas.getContext('2d');
+const ctx = myCanvas.getContext('2d');
 let angle = 0;
 
 const mouse = { x: 0, y: 0 };
@@ -26,7 +26,7 @@ function animate() {
   B.y = mouse.y + Math.sin(angle) * radius;
   angle += 0.02;
 
-  ctx.clearRect(0, 0, interCanvas.width, interCanvas.height);
+  ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
 
   ctx.beginPath();
   ctx.moveTo(A.x, A.y);

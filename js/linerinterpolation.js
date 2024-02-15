@@ -1,15 +1,15 @@
-interpCanvas.width = window.innerWidth;
-interpCanvas.height = window.innerHeight;
+myCanvas.width = window.innerWidth;
+myCanvas.height = window.innerHeight;
 
 const lowFreq = 200;
 const highFreq = 600;
 
-const ctx = interpCanvas.getContext('2d');
+const ctx = myCanvas.getContext('2d');
 
 let audioCtx = null;
 let ocs = null;
 
-interpCanvas.onclick = function () {
+myCanvas.onclick = function () {
   if (audioCtx == null) {
     audioCtx = new (AudioContext ||
       webkitAudioContext ||
@@ -38,7 +38,7 @@ const blue = { r: 0, g: 70, b: 160 };
 animate();
 
 function animate() {
-  ctx.clearRect(0, 0, interpCanvas.width, interpCanvas.height);
+  ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
 
   const sec = new Date().getTime() / 1000;
   // smoothing function
@@ -51,7 +51,7 @@ function animate() {
 
   // change background color
   const { r, g, b } = vLerp(orange, blue, t);
-  interpCanvas.style.backgroundColor = `rgb(${r},${g},${b})`;
+  myCanvas.style.backgroundColor = `rgb(${r},${g},${b})`;
 
   if (ocs) {
     ocs.frequency.value = lerp(lowFreq, highFreq, t);
@@ -62,10 +62,10 @@ function animate() {
   ctx.textBaseline = 'top';
   ctx.font = 'bold 40px Arial';
   ctx.setLineDash([lerp(50, 130, t), 130]);
-  ctx.strokeText('click for sound', interpCanvas.width / 2, 10);
+  ctx.strokeText('click for sound', myCanvas.width / 2, 10);
   ctx.setLineDash([]);
   ctx.fillStyle = 'rgba(255,255,255,0.2)';
-  ctx.fillText('click for sound', interpCanvas.width / 2, 10);
+  ctx.fillText('click for sound', myCanvas.width / 2, 10);
 
   requestAnimationFrame(animate);
 }
