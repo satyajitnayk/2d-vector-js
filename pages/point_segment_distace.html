@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>point and segment distance </title>
+  <style>
+    body {
+      text-align: center;
+    }
+
+    canvas {
+      margin: 5px;
+      background-color: black;
+    }
+
+    /* Style for the banner */
+    .banner {
+      position: fixed;
+      bottom: 60px;
+      /* Adjust position to avoid overlapping with the banner */
+      left: 0;
+      width: 100%;
+      background-color: #ff4500;
+      color: #fff;
+      padding: 15px 0;
+      text-align: center;
+      font-family: Arial, sans-serif;
+      font-size: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="myCanvas" width="600" height="600"></canvas>
+
+  <div class="banner">
+    <p>
+      Note:
+      * Use mouse pointer to move point M around.
+      * Use left click to move point A around.
+      * Use right click to move point B around.
+    </p>
+  </div>
+
+  <script src="../js/math.js"></script>
+  <script src="../js/draw.js"></script>
+  <script src="../js/point_segment_distace.js"></script>
+</body>
+
+</html>
